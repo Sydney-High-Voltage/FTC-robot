@@ -1,0 +1,66 @@
+public class OdometrySystem {
+    private DcMotor leftEncoder, rightEncoder, centerEncoder;
+    private double trackWidth;  
+    private double centerOffset;  
+    private double countsPerInch;  
+
+    private double x=0;// Robot's x position
+    private double y=0;//y position
+    private double heading = 0;// Robot's heading in radians
+    public OdometrySystem(DcMotor left, DcMotor right, DcMotor center, 
+                         double width, double offset, double cpi) {
+        leftEncoder = left;
+        rightEncoder = right;
+        centerEncoder = center;
+        trackWidth = width;
+        centerOffset = offset;
+        countsPerInch = cpi;
+
+
+        leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        centerEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        centerEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void update() {
+
+        int leftCount = leftEncoder.getCurrentPosition();
+        int rightCount = rightEncoder.getCurrentPosition();
+        int centerCount = centerEncoder.getCurrentPosition();
+
+
+        double leftInches = leftCount / countsPerInch;
+        double rightInches = rightCount / countsPerInch;
+        double centerInches = centerCount / countsPerInch;
+
+
+        double deltaHeading = (rightInches - leftInches) / trackWidth;
+        heading += deltaHeading;
+
+
+        double deltaLeft = leftInches;
+        double deltaRight = rightInches;
+        double deltaCenter = centerInches;
+
+
+        double deltaX = deltaCenter;
+        double deltaY = (deltaLeft + deltaRight) / 2;
+
+        double avgHeading = heading - (deltaHeading / 2);
+        double sinHeading = Math.sin(avgHeading);
+        double cosHeading = Math.cos(avgHeading);
+        x += (deltaX * cosHeading) - (deltaY * sinHeading);
+        y += (deltaX * sinHeading) + (deltaY * cosHeading);
+        leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        centerEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public double getX() { return x; }
+    public double getY() { return y; }
+    public double getHeading() { return heading; }
+}
