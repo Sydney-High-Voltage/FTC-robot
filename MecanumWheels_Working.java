@@ -53,10 +53,11 @@ public class MecanumWheels_Working extends LinearOpMode {
             double inputX = gamepad1.left_stick_x;
             double rot = gamepad1.right_stick_x;
 
-            // convert robot relative velocity to field relative velocity
+            // convert robot relative velocity to field relative velocity via 2d vector rotation
+            // https://en.wikipedia.org/wiki/Rotation_matrix
             double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
             double y = inputX * Math.cos(yaw) + inputY * Math.sin(yaw);
-            double x = -inputX * Math.cos(yaw) + inputY * Math.sin(yaw);
+            double x = -inputX * Math.sin(yaw) + inputY * Math.cos(yaw);
 
             double frontLeftPower = y + x + rot;
             double frontRightPower = y - x - rot;
