@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Dead Simple Auto. Just moves right to get the parking points.
  * Place the robot against the wall, to the left of the observation zone, facing into the center of the field.
  */
-@Autonomous(name = "Dead Simple Auto")
+@Autonomous(name = "Just Move Right")
 public class DeadSimpleAuto extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftMotor;
