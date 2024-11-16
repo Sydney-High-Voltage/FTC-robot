@@ -37,7 +37,7 @@ public class DeadSimpleAuto extends LinearOpMode {
             if (runtime.seconds() < 2) {
                 drive(0.5, 0, 0);
             } else {
-                drive(0, 0, 0);
+                stopDrive();
             }
             telemetry.update();
         }
@@ -71,5 +71,12 @@ public class DeadSimpleAuto extends LinearOpMode {
         telemetry.addData("FR Power", frontRightPower);
         telemetry.addData("BL Power", backLeftPower);
         telemetry.addData("BR Power", backRightPower);
+    }
+
+    public void stopDrive() {
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
     }
 }
