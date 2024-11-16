@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.lib.OmniDrive;
+
 /**
  * Dead Simple Auto. Just moves right to get the parking points.
  * Place the robot against the wall, to the left of the observation zone, facing into the center of the field.
@@ -17,6 +19,7 @@ public class DeadSimpleAuto extends LinearOpMode {
     private DcMotor frontRightMotor;
     private DcMotor backLeftMotor;
     private DcMotor backRightMotor;
+    private OmniDrive drive;
 
     @Override
     public void runOpMode() {
@@ -35,7 +38,7 @@ public class DeadSimpleAuto extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (runtime.seconds() < 2) {
-                drive(0.5, 0, 0);
+                drive(0, -1, 0);
             } else {
                 stopDrive();
             }
