@@ -4,9 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.lib.OmniDrive;
 
 /**
  * Dead Simple Auto. Just moves right to get the parking points.
@@ -14,12 +11,10 @@ import org.firstinspires.ftc.teamcode.lib.OmniDrive;
  */
 @Autonomous(name = "Just Move Right")
 public class DeadSimpleAuto extends LinearOpMode {
-    private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftMotor;
     private DcMotor frontRightMotor;
     private DcMotor backLeftMotor;
     private DcMotor backRightMotor;
-    private OmniDrive drive;
 
     @Override
     public void runOpMode() {
@@ -32,18 +27,14 @@ public class DeadSimpleAuto extends LinearOpMode {
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
-        runtime.reset();
 
-        while (opModeIsActive()) {
-            if (runtime.seconds() < 2) {
-                drive(0, -1, 0);
-            } else {
-                stopDrive();
-            }
-            telemetry.update();
-        }
+        drive(0, 1, 0);
+        sleep(2000);
+        drive(0, 0, 0);
     }
 
     public void drive(double x, double y, double r) {
@@ -74,12 +65,7 @@ public class DeadSimpleAuto extends LinearOpMode {
         telemetry.addData("FR Power", frontRightPower);
         telemetry.addData("BL Power", backLeftPower);
         telemetry.addData("BR Power", backRightPower);
-    }
 
-    public void stopDrive() {
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
+        telemetry.update();
     }
 }
