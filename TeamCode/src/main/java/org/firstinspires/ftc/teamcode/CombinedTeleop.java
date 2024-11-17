@@ -48,7 +48,7 @@ public class CombinedTeleop extends LinearOpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
 
-        // the front right motor is reversed for some reason lol
+        // the front right motor is reversed for some reason
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // IMU
@@ -77,11 +77,6 @@ public class CombinedTeleop extends LinearOpMode {
     // from https://www.gobilda.com/4-stage-viper-slide-kit-cable-driven-336mm-slides/
     private static final double SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION = 976.0 / 112.0;
 
-    private static int slideRotationsToTicks(double rotations) {
-        // all the motor positioning functions require ticks as integers, so we cast to int
-        return (int) (rotations * SLIDE_ENCODER_TICKS_PER_ROTATION);
-    }
-
     private void updateSlides() {
         // the a, b and x buttons on the controller are on top of each other in that order
         // so it kind of intuitively makes sense that a is no extension, b is 1/2 and x is full?
@@ -91,18 +86,21 @@ public class CombinedTeleop extends LinearOpMode {
             leftSlideMotor.setTargetPosition(0);
             rightSlideMotor.setTargetPosition(0);
         } else if (gamepad1.b) {
-            leftSlideMotor.setTargetPosition(slideRotationsToTicks(SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION / 2.0));
-            rightSlideMotor.setTargetPosition(slideRotationsToTicks(SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION / 2.0));
+            leftSlideMotor.setTargetPosition((int) ((SLIDE_ENCODER_TICKS_PER_ROTATION * SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION) / 2.0));
+            rightSlideMotor.setTargetPosition((int) ((SLIDE_ENCODER_TICKS_PER_ROTATION * SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION) / 2.0));
         } else if (gamepad1.x) {
-            leftSlideMotor.setTargetPosition(slideRotationsToTicks(SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION));
-            rightSlideMotor.setTargetPosition(slideRotationsToTicks(SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+            leftSlideMotor.setTargetPosition((int) (SLIDE_ENCODER_TICKS_PER_ROTATION * SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+            rightSlideMotor.setTargetPosition((int) (SLIDE_ENCODER_TICKS_PER_ROTATION * SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION));
         }
 
         // the target positions for the slides are the same for both motors, so we can just use one of them
-        telemetry.addData("Slide Target Position", leftSlideMotor.getTargetPosition());
+        telemetry.addData("Slide Target Spool Rotations", leftSlideMotor.getTargetPosition() / SLIDE_ENCODER_TICKS_PER_ROTATION);
+        telemetry.addData("Slide Target Extension %", leftSlideMotor.getTargetPosition() / (SLIDE_ENCODER_TICKS_PER_ROTATION * SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION));
 
-        telemetry.addData("Left Slide Position", leftSlideMotor.getCurrentPosition());
-        telemetry.addData("Right Slide Position", rightSlideMotor.getCurrentPosition());
+        telemetry.addData("Left Slide Spool Rotations", leftSlideMotor.getCurrentPosition() / SLIDE_ENCODER_TICKS_PER_ROTATION);
+        telemetry.addData("Left Slide Extension %", leftSlideMotor.getCurrentPosition() / (SLIDE_ENCODER_TICKS_PER_ROTATION * SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+        telemetry.addData("Right Slide Spool Rotations", rightSlideMotor.getCurrentPosition() / SLIDE_ENCODER_TICKS_PER_ROTATION);
+        telemetry.addData("Right Slide Extension %", rightSlideMotor.getCurrentPosition() / (SLIDE_ENCODER_TICKS_PER_ROTATION * SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION));
     }
 
 
