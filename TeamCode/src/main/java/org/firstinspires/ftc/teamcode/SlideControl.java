@@ -13,38 +13,50 @@ public class SlideControl extends LinearOpMode {
     // from https://www.gobilda.com/4-stage-viper-slide-kit-cable-driven-336mm-slides/
     private static final double SPOOL_ROTATIONS_TO_MAX_EXTENSION = 976.0 / 112.0;
 
-    private DcMotorEx motor;
+    private DcMotor leftMotor;
+    private DcMotor rightMotor;
     private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
-        motor = hardwareMap.get(DcMotorEx.class, "motor");
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPositionPIDFCoefficients(0.1);
+        leftMotor = hardwareMap.get(DcMotorEx.class, "leftSlideMotor");
+        rightMotor = hardwareMap.get(DcMotorEx.class, "rightSlideMotor");
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
             if (gamepad1.a) {
-                motor.setTargetPosition(rotationsToTicks(0));
+                leftMotor.setTargetPosition(0);
+                rightMotor.setTargetPosition(0);
             } else if (gamepad1.b) {
-                motor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION / 2));
+                leftMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION / 2));
+                rightMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION / 2));
             } else if (gamepad1.x) {
-                motor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION - 0.2));
+                leftMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+                rightMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION));
             }
+
             telemetry.addData("Status", "Running (%d s)", runtime.seconds());
+            telemetry.addData("Slide Target Rotations", leftMotor.getTargetPosition() / ENCODER_TICKS_PER_ROTATION);
+            telemetry.addData("Slide Target Extension %", leftMotor.getTargetPosition() / (ENCODER_TICKS_PER_ROTATION * SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+            telemetry.addData("Left Slide Spool Rotations", leftMotor.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION);
+            telemetry.addData("Right Slide Spool Position", rightMotor.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION);
+            telemetry.addData("Left Slide Extension %", leftMotor.getCurrentPosition() / (ENCODER_TICKS_PER_ROTATION * SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+            telemetry.addData("Right Slide Extension %", rightMotor.getCurrentPosition() / (ENCODER_TICKS_PER_ROTATION * SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+            telemetry.update();
         }
     }
 
     private int rotationsToTicks(double rotations) {
         return (int) (rotations * ENCODER_TICKS_PER_ROTATION);
 
-    }
-
-    private double getEncoderRotations() {
-        return motor.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION;
     }
 }
