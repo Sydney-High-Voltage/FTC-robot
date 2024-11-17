@@ -46,10 +46,10 @@ public class SlideControl extends LinearOpMode {
                 rightMotor.setTargetPosition(0);
             } else if (gamepad1.b) {
                 leftMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION * 0.5));
-                rightMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION / 2));
+                rightMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION * 0.5));
             } else if (gamepad1.x) {
                 leftMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION * 0.8));
-                rightMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+                rightMotor.setTargetPosition(rotationsToTicks(SPOOL_ROTATIONS_TO_MAX_EXTENSION * 0.8));
             }
 
             telemetry.addData("Status", runtime.seconds());
