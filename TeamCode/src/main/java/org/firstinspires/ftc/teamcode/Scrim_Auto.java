@@ -49,13 +49,30 @@ public class Scrim_Auto extends LinearOpMode {
         frontLeftDrive.setPower(-0.5);
         backRightDrive.setPower(0.5);
         frontRightDrive.setPower(-0.5);
+        sleep(6500);
+        stopDriving();
+        moveForward();
+        sleep(1500);
+        stopDriving();
+        backLeftDrive.setPower(-1);
+        frontLeftDrive.setPower(1);
+        sleep(3000);
+        stopDriving();
+        backLeftDrive.setPower(-1);
+        frontLeftDrive.setPower(1);
+        sleep(6500);
+        stopDriving();
+        backRightDrive.setPower(1);
+        frontRightDrive.setPower(-1);
         sleep(1000);
+        stopDriving();
         backLeftDrive.setPower(1);
         frontLeftDrive.setPower(1);
         backRightDrive.setPower(-1);
-        frontRightDrive.setPower(-1);
-        sleep(6000);
+        backLeftDrive.setPower(-1);
+        sleep(8000);
         stopDriving();
+
     }
 
     private void moveForward() {
