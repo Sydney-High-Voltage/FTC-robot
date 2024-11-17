@@ -10,6 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+// NOTE:
+// x refers to forward-backward movement
+// y refers to left-right movement
 
 @TeleOp(name = "field-relative drive")
 public class FieldRelativeDrive extends LinearOpMode {
@@ -50,58 +53,60 @@ public class FieldRelativeDrive extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Yaw Angle (deg)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
             // allow driver to reset yaw
             if (gamepad1.options) {
                 imu.resetYaw();
             }
 
             // get joystick inputs
-            double inputY = -gamepad1.left_stick_y;
-            double inputX = gamepad1.left_stick_x;
+            double inputX = -gamepad1.left_stick_y;
+            double inputY = gamepad1.left_stick_x;
             double rot = gamepad1.right_stick_x;
+            driveFieldRelative(inputX, inputY, rot);
 
-            // this converts the input velocity, which is robot-relative, to field relative velocity via 2d vector rotation (https://en.wikipedia.org/wiki/Rotation_matrix)
-            // this allows the driver to control the robot using motions relative to the field rather than the robot.
-            // i assume this is what you were trying to do in the other files, but... failed.
-            // also, ftclib has lots of classes that do these calculations for you. if you want to use those, find docs for the MecanumDriveKinematics and ChassisSpeeds classes, among others.
-            // alternatively, feel free to ping me on the discord if you get stuck.
-            // - neel
-            double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            double y = inputX * Math.cos(yaw) + inputY * Math.sin(yaw);
-            double x = -inputX * Math.sin(yaw) + inputY * Math.cos(yaw);
-
-            // fyi the rest of this code is mainly taken from the example mecanum drive code that ftc provides.
-            // - neel
-            double frontLeftPower = y + x + rot;
-            double frontRightPower = y - x - rot;
-            double backLeftPower = y - x + rot;
-            double backRightPower = y + x - rot;
-
-            // make sure we're not setting motor powers >1.0
-            double max;
-            max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
-            max = Math.max(max, Math.abs(backLeftPower));
-            max = Math.max(max, Math.abs(backRightPower));
-            if (max > 1.0) {
-                frontLeftPower /= max;
-                frontRightPower /= max;
-                backLeftPower /= max;
-                backRightPower /= max;
-            }
-
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
-
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Yaw Angle (deg)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.addData("FL Power", frontLeftPower);
-            telemetry.addData("FR Power", frontRightPower);
-            telemetry.addData("BL Power", backLeftPower);
-            telemetry.addData("BR Power", backRightPower);
             telemetry.update();
         }
+    }
+
+    private void driveFieldRelative(double x, double y, double r) {
+        // https://en.wikipedia.org/wiki/Rotation_matrix
+        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double robotRelativeX = x * Math.cos(yaw) + y * Math.sin(yaw);
+        double robotRelativeY = -x * Math.sin(yaw) + y * Math.cos(yaw);
+        drive(robotRelativeX, robotRelativeY, r);
+    }
+
+    private void drive(double x, double y, double r) {
+        double frontLeftPower = x - y - r;
+        double frontRightPower = x + y + r;
+        double backLeftPower = x + y - r;
+        double backRightPower = x - y + r;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
+        max = Math.max(max, Math.abs(backLeftPower));
+        max = Math.max(max, Math.abs(backRightPower));
+
+        if (max > 1.0) {
+            frontLeftPower /= max;
+            frontRightPower /= max;
+            backLeftPower /= max;
+            backRightPower /= max;
+        }
+
+        // Send powers to the wheels.
+        frontLeftMotor.setPower(frontLeftPower);
+        frontRightMotor.setPower(frontRightPower);
+        backLeftMotor.setPower(backLeftPower);
+        backRightMotor.setPower(backRightPower);
+
+        telemetry.addData("FL Drive Power", frontLeftPower);
+        telemetry.addData("FR Drive Power", frontRightPower);
+        telemetry.addData("BL Drive Power", backLeftPower);
+        telemetry.addData("BR Drive Power", backRightPower);
     }
 }
 
