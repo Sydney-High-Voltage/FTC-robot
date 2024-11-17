@@ -11,14 +11,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
-@TeleOp(name = "drive")
-public class MecanumWheels_Working extends LinearOpMode {
+@TeleOp(name = "field-relative drive")
+public class FieldRelativeDrive extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
-    private IMU imu = null;
-    private DcMotor frontLeftMotor = null;
-    private DcMotor backLeftMotor = null;
-    private DcMotor frontRightMotor = null;
-    private DcMotor backRightMotor = null;
+    private IMU imu;
+    private DcMotor frontLeftMotor;
+    private DcMotor backLeftMotor;
+    private DcMotor frontRightMotor;
+    private DcMotor backRightMotor;
 
     @Override
     public void runOpMode() {
@@ -34,14 +34,17 @@ public class MecanumWheels_Working extends LinearOpMode {
         // for future reference, if the robot isn't moving correctly, it's usually a good idea to prop the robot up so that the wheels don't touch the floor so you can inspect if wheels are turning the right way or not. that's how i discovered this.
         // - neel
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        imu.initialize(parameters);
+        final IMU.Parameters params = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
+                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+        imu.initialize(params);
 
         waitForStart();
         runtime.reset();

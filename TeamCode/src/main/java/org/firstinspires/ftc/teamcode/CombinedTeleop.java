@@ -50,13 +50,15 @@ public class CombinedTeleop extends LinearOpMode {
 
         // the front right motor is reversed for some reason
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // IMU
         imu = hardwareMap.get(IMU.class, "imu");
         final IMU.Parameters params = new IMU.Parameters(
                 new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+                        RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
+                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
         imu.initialize(params);
 
         // EXTENSION SERVO
