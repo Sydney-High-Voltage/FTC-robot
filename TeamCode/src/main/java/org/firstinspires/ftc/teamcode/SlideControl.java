@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Slide Control")
@@ -22,8 +23,9 @@ public class SlideControl extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        leftMotor = hardwareMap.get(DcMotorEx.class, "leftSlideMotor");
-        rightMotor = hardwareMap.get(DcMotorEx.class, "rightSlideMotor");
+        leftMotor = hardwareMap.get(DcMotorEx.class, "leftMotor");
+        rightMotor = hardwareMap.get(DcMotorEx.class, "rightMotor");
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotor.setTargetPosition(0);
         rightMotor.setTargetPosition(0);
         leftMotor.setPositionPIDFCoefficients(1);
@@ -51,14 +53,12 @@ public class SlideControl extends LinearOpMode {
             }
 
             telemetry.addData("Status", runtime.seconds());
-            telemetry.addData("Slide Target Distance Ticks", leftMotor.getTargetPosition());
-            telemetry.addData("Slide Busy", leftMotor.isBusy());
             telemetry.addData("Slide Target Rotations", leftMotor.getTargetPosition() / ENCODER_TICKS_PER_ROTATION);
             telemetry.addData("Slide Target Extension %", leftMotor.getTargetPosition() / (ENCODER_TICKS_PER_ROTATION * SPOOL_ROTATIONS_TO_MAX_EXTENSION));
             telemetry.addData("Left Slide Spool Rotations", leftMotor.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION);
-            //telemetry.addData("Right Slide Spool Position", rightMotor.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION);
+            telemetry.addData("Right Slide Spool Position", rightMotor.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION);
             telemetry.addData("Left Slide Extension %", leftMotor.getCurrentPosition() / (ENCODER_TICKS_PER_ROTATION * SPOOL_ROTATIONS_TO_MAX_EXTENSION));
-            //telemetry.addData("Right Slide Extension %", rightMotor.getCurrentPosition() / (ENCODER_TICKS_PER_ROTATION * SPOOL_ROTATIONS_TO_MAX_EXTENSION));
+            telemetry.addData("Right Slide Extension %", rightMotor.getCurrentPosition() / (ENCODER_TICKS_PER_ROTATION * SPOOL_ROTATIONS_TO_MAX_EXTENSION));
             telemetry.update();
         }
     }
