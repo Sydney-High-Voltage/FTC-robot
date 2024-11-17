@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,8 +19,8 @@ public class CombinedTeleop extends LinearOpMode {
     private DcMotor frontRightMotor;
     private DcMotor backLeftMotor;
     private DcMotor backRightMotor;
-    private DcMotor leftSlideMotor;
-    private DcMotor rightSlideMotor;
+    private DcMotorEx leftSlideMotor;
+    private DcMotorEx rightSlideMotor;
     private Servo extensionServo;
     private IMU imu;
 
@@ -65,13 +66,25 @@ public class CombinedTeleop extends LinearOpMode {
         extensionServo = hardwareMap.get(Servo.class, "extensionServo");
 
         // SLIDE MOTORS
-        leftSlideMotor = hardwareMap.get(DcMotor.class, "leftSlideMotor");
-        rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
-        leftSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlideMotor");
+        rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlideMotor");
+
         // we use the slides for climbing as well, so we should brake on zero power
         leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftSlideMotor.setPositionPIDFCoefficients(1);
+        rightSlideMotor.setPositionPIDFCoefficients(1);
+
+        // target position must be set prior to setting mode to RUN_TO_POSITION
+        leftSlideMotor.setTargetPosition(0);
+        rightSlideMotor.setTargetPosition(0);
+
+        leftSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftSlideMotor.setPower(1);
+        rightSlideMotor.setPower(1);
     }
 
     // from https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
@@ -125,7 +138,12 @@ public class CombinedTeleop extends LinearOpMode {
         double inputY = -gamepad1.left_stick_y; // invert y input because controllers are weird
         double inputX = gamepad1.left_stick_x;
         double inputR = gamepad1.right_stick_x;
-        driveFieldRelative(inputX, inputY, inputR);
+
+        // field-rel is broken because of the imu only reporting yaw between -90 and 90 degrees
+        // TODO: fix
+        //driveFieldRelative(inputX, inputY, inputR);
+
+        drive(inputX, inputY, inputR);
     }
 
     private void driveFieldRelative(double x, double y, double r) {
