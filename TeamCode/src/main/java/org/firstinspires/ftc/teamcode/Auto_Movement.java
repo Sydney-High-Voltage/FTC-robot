@@ -172,19 +172,19 @@ public class Auto_Movement extends LinearOpMode {
 
             //ODOMETRY CODE TRY
 
-            ContinuousDistancing(2, y, x, true);
-            ContinuousDistancing(-0.3, y, x, false);
+            ContinuousDistancing(0.75, y, x, true);
+            ContinuousDistancing(0.5, y, x, false);
             RobotRotation(90);
-            ContinuousDistancing(5, y, x, true);
+            ContinuousDistancing(1.6, y, x, true);
             RobotRotation(-90);
-            ContinuousDistancing(0.2, y ,x, true);
+            ContinuousDistancing(0.32, y ,x, true);
             for (int l = 0; l < 2; l++) {
-                ContinuousDistancing(5, y, x, false);
-                ContinuousDistancing(5, y, x, true);
-                ContinuousDistancing(0.2, y, x, true);
+                ContinuousDistancing(1.6, y, x, false);
+                ContinuousDistancing(1.6, y, x, true);
+                ContinuousDistancing(0.32, y, x, true);
             }
-            ContinuousDistancing(5, y, x, false);
-            ContinuousDistancing(8, y, x, false);
+            ContinuousDistancing(1.6, y, x, false);
+            ContinuousDistancing(3.6, y, x, false);
         }
 
         /*
