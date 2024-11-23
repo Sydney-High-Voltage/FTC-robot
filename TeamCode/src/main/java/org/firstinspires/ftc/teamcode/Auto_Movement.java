@@ -61,15 +61,25 @@ public class Auto_Movement extends LinearOpMode {
     DcMotor frontRightDrive = null;
     IMU imu;
     private ElapsedTime runtime = new ElapsedTime();
+    private double currentHeading;
+    private double x;
+    private double y;
     private DcMotor leftEncoder, rightEncoder, horizontalEncoder;
     private HolonomicOdometry odometry;
     private double prevX = 0;
     private double prevY = 0;
     private double distanceTravelled = 0;
+
+    /*
+
+
     private static final double ODOMETRY_TICKS_PER_REVOLUTION = 2000;
     private static final double ODOMETRY_POD_DIAMETER = 0.032;
     private static final double ODOMETRY_POD_DISTANCE_PER_TICK = Math.PI * ODOMETRY_POD_DIAMETER / ODOMETRY_TICKS_PER_REVOLUTION;
-    private static final double TRACKWIDTH = 0.25; //Distance between left and right wheels FIND CORRECT VALUE
+
+    */
+    private static final double TRACKWIDTH = 0.25; //Distance between left and right wheels
+
     private static final double CENTER_WHEEL_OFFSET = 0.255; //FIND CORRECT VALUE Distance form center of the robot to the central odometry pod
 
     @Override
@@ -147,16 +157,26 @@ public class Auto_Movement extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        //double targetHeading = Math.toRadians(90);
+        //double power = 0.5;
+
         while (opModeIsActive()) {
 
             odometry.updatePose();
 
             double x = odometry.getPose().getX();
             double y = odometry.getPose().getY();
-            double heading = odometry.getPose().getHeading();
+            Heading();
 
             double deltaX = x - prevX;
             double deltaY = y - prevY;
+
+            //double currentHeading = odometry.getPose().getHeading();
+
+            /*if (Math.abs(targetHeading-currentHeading)<Math.toRadians(2)) {
+                stopDriving();
+                break;
+            }*/
 
             double distanceThisIteration = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             distanceTravelled += distanceThisIteration;
@@ -164,28 +184,33 @@ public class Auto_Movement extends LinearOpMode {
             prevX = x;
             prevY = y;
 
+
             telemetry.addData("Distance Travelled", distanceTravelled);
             telemetry.addData("X Position", x);
             telemetry.addData("Y Position", y);
-            telemetry.addData("Heading (radians)", heading);
+            telemetry.addData("Current Heading (degrees)", Math.toDegrees(currentHeading));
+
             telemetry.update();
 
             //ODOMETRY CODE TRY
 
-            ContinuousDistancing(0.75, y, x, true);
-            ContinuousDistancing(0.5, y, x, false);
-            RobotRotation(90);
-            ContinuousDistancing(1.6, y, x, true);
-            RobotRotation(-90);
-            ContinuousDistancing(0.32, y ,x, true);
-            for (int l = 0; l < 2; l++) {
-                ContinuousDistancing(1.6, y, x, false);
-                ContinuousDistancing(1.6, y, x, true);
-                ContinuousDistancing(0.32, y, x, true);
-            }
-            ContinuousDistancing(1.6, y, x, false);
-            ContinuousDistancing(3.6, y, x, false);
         }
+
+        ContinuousDistancing(0.75, y, x, true);
+        ContinuousDistancing(0.5, y, x, false);
+        //RobotRotation(90);
+        OdometricRotation(90, false);
+        ContinuousDistancing(1.6, y, x, true);
+        //RobotRotation(-90);
+        OdometricRotation(90, true);
+        ContinuousDistancing(0.32, y ,x, true);
+        for (int l = 0; l < 2; l++) {
+            ContinuousDistancing(1.6, y, x, false);
+            ContinuousDistancing(1.6, y, x, true);
+            ContinuousDistancing(0.32, y, x, true);
+        }
+        ContinuousDistancing(1.6, y, x, false);
+        ContinuousDistancing(3.6, y, x, false);
 
         /*
         USE CODE TO CONFIRM STRAFING RIGHT IS POSITIVE VALUE AND OPPOSITE FOR LEFT
@@ -194,7 +219,7 @@ public class Auto_Movement extends LinearOpMode {
         telemetry.update();
          */
 /*
-        //TIMEBASE CODE
+        //ORIGINAL TIMEBASE CODE --> BETTER VERSION DONE IN ANOTHER JAVA DOC
 
             //Simplest Auto Code for scoring one sample and parking
             drive(1, 0, 0);
@@ -220,83 +245,6 @@ public class Auto_Movement extends LinearOpMode {
             drive(0, 1, 0);
             sleep(6000);
             stopDriving();
-
-            //Official TimeBase Code
-
-       public class RobotAutoDriveByTime_Linear extends LinearOpMode {
-
-
-        private DcMotor         leftDrive   = null;
-        private DcMotor         rightDrive  = null;
-
-        private ElapsedTime     runtime = new ElapsedTime();
-
-
-        static final double     FORWARD_SPEED = 0.6;
-        static final double     TURN_SPEED    = 0.5;
-
-        @Override
-        public void runOpMode() {
-
-            leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-            rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
-
-            leftDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightDrive.setDirection(DcMotor.Direction.FORWARD);
-
-
-            telemetry.addData("Status", "Ready to run");
-            telemetry.update();
-
-
-            waitForStart();
-
-
-
-            // Step 1:  Drive forward for 3 seconds
-            leftDrive.setPower(FORWARD_SPEED);
-            rightDrive.setPower(FORWARD_SPEED);
-            runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 3.0)) {
-                telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-            }
-
-            // Step 2:  Spin right for 1.3 seconds
-            leftDrive.setPower(TURN_SPEED);
-            rightDrive.setPower(-TURN_SPEED);
-            runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 1.3)) {
-                telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-            }
-
-            // Step 3:  Drive Backward for 1 Second
-            leftDrive.setPower(-FORWARD_SPEED);
-            rightDrive.setPower(-FORWARD_SPEED);
-            runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-                telemetry.addData("Path", "Leg 3: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-            }
-
-            // Step 4:  Stop
-            leftDrive.setPower(0);
-            rightDrive.setPower(0);
-
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
-            sleep(1000);
-        }
-    }
-
-
-
-
-
-
-
 
         */
 
@@ -338,8 +286,11 @@ public class Auto_Movement extends LinearOpMode {
         telemetry.addData("Back Right Power", rightBackPower);
         telemetry.update();
     }
+    /*
+    IMU CODE
+
     private double yaw() {
-        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         return yaw;
     }
 
@@ -352,22 +303,22 @@ public class Auto_Movement extends LinearOpMode {
             currentYaw = yaw();
         }
     }
-
+*/
     private void ContinuousDistancing(double targetDistance, double Cy, double Cx, boolean positiveMove) {
         //targetDistance is where you want to reach at the end
-        double initialDistance = DistanceCalc();
+        double initialDistance = distanceTravelled;
         double currentDistance = initialDistance;
-        while (currentDistance - initialDistance < targetDistance ) {
+        while (Math.abs(currentDistance - initialDistance) < targetDistance ) {
             // move forward
             if (Cy==0) {
-                currentDistance = DistanceCalc();
+                currentDistance = distanceTravelled;
                 if (positiveMove == true) {
                     drive(1, 0, 0);
                 } else {
                     drive(-1,0,0);
                 }
             } else if (Cx==0) {
-                currentDistance = DistanceCalc();
+                currentDistance = distanceTravelled;
                 if (positiveMove == true) {
                     drive(0, 1, 0);
                 } else {
@@ -377,8 +328,26 @@ public class Auto_Movement extends LinearOpMode {
         }
         stopDriving();
     }
-    private double DistanceCalc() {
-       return distanceTravelled;
+
+    private void OdometricRotation(double targetHeading, boolean left) {
+        double initialHeading = currentHeading;
+        odometry.updatePose();
+        if (left == true) {
+            drive(0,0, -1);
+            if (Math.abs(Math.toRadians(targetHeading)-currentHeading)<Math.toRadians(2)){
+                stopDriving();
+            }
+        } else {
+            drive(0,0, 1);
+            if (Math.abs(Math.toRadians(targetHeading)-currentHeading)<Math.toRadians(2)){
+                stopDriving();
+            }
+        }
+
+    }
+
+    private void Heading() {
+        currentHeading = odometry.getPose().getHeading();
     }
 
 
