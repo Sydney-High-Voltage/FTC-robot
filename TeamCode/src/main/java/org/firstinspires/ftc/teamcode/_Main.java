@@ -13,12 +13,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-// DO
-// NOT
-// TOUCH
-// ITS WORKING
+// Main TeleOp
 @TeleOp(name = "Main")
-public class Main extends LinearOpMode {
+public class _Main extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftMotor;
     private DcMotor frontRightMotor;
