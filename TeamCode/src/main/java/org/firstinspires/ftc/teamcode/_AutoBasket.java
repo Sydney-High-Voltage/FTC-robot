@@ -36,13 +36,14 @@ public class _AutoBasket extends LinearOpMode {
 
         rotationServo.setPower(0.1);
         slideTarget(2);
-        sleep(1000);
-
+        sleep(500);
         mv(0.5,0,0, 200);
         mv(0,0.2,-0.19, 800);
         mv(0.4,0,0, 400);
         mv(0.4,0,0, 200);
+        extend();
         outtake();
+        shorten();
         //mv(0,-0.2,0, 800);
         slideTarget(0);
         sleep(300);
@@ -54,10 +55,16 @@ public class _AutoBasket extends LinearOpMode {
         mv(0, -0.5,0, 300);
         mv(-0.4,0,0, 300);
         rotationServo.setPower(0.6);
+        extend();
         mv(0, 0.1, 0, 3000);
+        rotationServo.setPower(0.1);
+        shorten();
         mv(-0.4,0,0, 1000);
+
         slideTarget(2);
+
         mv(0,-0.2,0.19, 800);
+        extend();
         outtake();
 
 
@@ -73,12 +80,12 @@ public class _AutoBasket extends LinearOpMode {
 
     private void extend(){
         extensionServo.setPower(1);
-        sleep(400);
+        sleep(1000);
         extensionServo.setPower(0);
     }
     private void shorten(){
         extensionServo.setPower(-1);
-        sleep(400);
+        sleep(1000);
         extensionServo.setPower(0);
     }
     private void mv(double x, double y, double r, long milisec) {
