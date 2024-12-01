@@ -52,7 +52,7 @@ public class Nationals_Auto extends LinearOpMode {
             telemetry.addData("Pose", odometry.getPose());
             telemetry.update();
 
-            moveDistance(2,0.5, 0.25);2
+            moveDistance(2,0.5, 0.25);
         }
     }
 

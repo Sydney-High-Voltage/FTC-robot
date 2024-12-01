@@ -36,6 +36,8 @@ public class _AutoBasket extends LinearOpMode {
 
         rotationServo.setPower(0.1);
         slideTarget(2);
+        sleep(1000);
+
         mv(0.5,0,0, 200);
         mv(0,0.2,-0.19, 800);
         mv(0.4,0,0, 400);
@@ -43,12 +45,20 @@ public class _AutoBasket extends LinearOpMode {
         outtake();
         //mv(0,-0.2,0, 800);
         slideTarget(0);
+        sleep(300);
         mv(0,-0.2,0.19, 800);
         sleep(300);
-        mv(0.6,0,0, 900);
-        mv(-0.6,0,0, 100);
+        mv(0.6,0,0, 1000);
+        sleep(50);
+        mv(-0.6,0,0, 200);
         mv(0, -0.5,0, 300);
-
+        mv(-0.4,0,0, 300);
+        rotationServo.setPower(0.6);
+        mv(0, 0.1, 0, 3000);
+        mv(-0.4,0,0, 1000);
+        slideTarget(2);
+        mv(0,-0.2,0.19, 800);
+        outtake();
 
 
         waitForStart();
@@ -59,6 +69,17 @@ public class _AutoBasket extends LinearOpMode {
         runtime.reset();
 
 
+    }
+
+    private void extend(){
+        extensionServo.setPower(1);
+        sleep(400);
+        extensionServo.setPower(0);
+    }
+    private void shorten(){
+        extensionServo.setPower(-1);
+        sleep(400);
+        extensionServo.setPower(0);
     }
     private void mv(double x, double y, double r, long milisec) {
         drive(r, -y, x);
@@ -92,10 +113,10 @@ public class _AutoBasket extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // EXTENSION SERVO
         extensionServo = hardwareMap.get(CRServo.class, "extensionServo");
         rotationServo = hardwareMap.get(CRServo.class, "rotationServo");

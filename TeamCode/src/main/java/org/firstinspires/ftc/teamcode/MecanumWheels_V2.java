@@ -1,3 +1,9 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 /***********************************************************************
 *                                                                      *
@@ -8,7 +14,7 @@
 ***********************************************************************/
 
 
-public class MyFIRSTJavaOpMode extends LinearOpMode {
+public class MecanumWheels_V2 extends LinearOpMode {
     DcMotor backLeftDrive;
     DcMotor backRightDrive;
     DcMotor frontLeftDrive;
@@ -22,7 +28,6 @@ public class MyFIRSTJavaOpMode extends LinearOpMode {
 
 @Override
     public void runOpMode() {
-      Gamepad gamepad1 = new FTCGamepad();
       backLeftDrive = hardwareMap.get(DcMotor.class, "backLeftDrive");
       backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
       frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeftDrive");
