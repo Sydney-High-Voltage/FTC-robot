@@ -60,7 +60,6 @@ public class _AutoBasket extends LinearOpMode {
         rotationServo.setPower(0.1);
         shorten();
         mv(-0.4,0,0, 1000);
-
         slideTarget(2);
 
         mv(0,-0.2,0.19, 800);
