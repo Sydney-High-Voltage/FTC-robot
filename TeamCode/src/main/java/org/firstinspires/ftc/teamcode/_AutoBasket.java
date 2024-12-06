@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 // Main TeleOp
-@TeleOp(name = "Basket")
+@Autonomous(name = ".Basket")
 public class _AutoBasket extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftMotor;
@@ -31,33 +32,39 @@ public class _AutoBasket extends LinearOpMode {
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
-
         initHardware();
+        waitForStart();
 
-        rotationServo.setPower(0.1);
+
+        //rotationServo.setPower(0.1);
         slideTarget(2);
         sleep(500);
         mv(0.5,0,0, 200);
-        mv(0,0.2,-0.19, 800);
+        mv(0,0.2,-0.19, 900);
+        mv(0,0,-0.2,400);
         mv(0.4,0,0, 400);
         mv(0.4,0,0, 200);
-        extend();
+        mv(0.0,0.4,0, 350);
+        //extend();
         outtake();
-        shorten();
+        mv(0.0,-0.4,0, 350);
+        //shorten();
         //mv(0,-0.2,0, 800);
         slideTarget(0);
         sleep(300);
+        mv(0,0,0.2,500);
         mv(0,-0.2,0.19, 800);
+        mv(0, -0.5,0, 50);
         sleep(300);
-        mv(0.6,0,0, 1000);
+        mv(0.6,0,0, 1700);
         sleep(50);
         mv(-0.6,0,0, 200);
-        mv(0, -0.5,0, 300);
+        mv(0, -0.5,0, 400);
         mv(-0.4,0,0, 300);
-        rotationServo.setPower(0.6);
+        rotationServo.setPower(-0.6);
         extend();
-        mv(0, 0.1, 0, 3000);
-        rotationServo.setPower(0.1);
+        mv(0, 0.2, 0, 3000);
+
         shorten();
         mv(-0.4,0,0, 1000);
         slideTarget(2);
@@ -78,13 +85,13 @@ public class _AutoBasket extends LinearOpMode {
     }
 
     private void extend(){
-        extensionServo.setPower(1);
-        sleep(1000);
+        extensionServo.setPower(-1);
+        sleep(1500);
         extensionServo.setPower(0);
     }
     private void shorten(){
-        extensionServo.setPower(-1);
-        sleep(1000);
+        extensionServo.setPower(1);
+        sleep(1500);
         extensionServo.setPower(0);
     }
     private void mv(double x, double y, double r, long milisec) {
@@ -141,6 +148,8 @@ public class _AutoBasket extends LinearOpMode {
         leftSlideMotor.setTargetPosition(0);
         rightSlideMotor.setTargetPosition(0);
 
+
+
         leftSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -152,17 +161,17 @@ public class _AutoBasket extends LinearOpMode {
     // from https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     private static final double SLIDE_ENCODER_TICKS_PER_ROTATION = ((((1 + (46.0 / 17.0))) * (1 + (46.0 / 11.0))) * 28);
     // from https://www.gobilda.com/4-stage-viper-slide-kit-cable-driven-336mm-slides/
-    private static final double SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION = 976.0 / 120.0 * 1.055;
+    private static final double SLIDE_SPOOL_ROTATIONS_TO_MAX_EXTENSION = 976.0 / 120.0 * 1.05;
     private void stay(){
         rotationServo.setPower(0.1);
     }
     private void intake(){
-        rotationServo.setPower(0.6);
+        rotationServo.setPower(-0.9);
 
     }
     private void outtake(){
-        rotationServo.setPower(-.6);
-        sleep(500);
+        rotationServo.setPower(.9);
+        sleep(1000);
         rotationServo.setPower(0);
     }
     private void slideTarget(int mode){

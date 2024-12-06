@@ -35,13 +35,22 @@ public class _Main extends LinearOpMode {
         initHardware();
 
         waitForStart();
+
         runtime.reset();
+        long lastLoopTime = System.nanoTime();
 
         while (opModeIsActive()) {
             //telemetry.addData("Status", "Running (%d s)", runtime.seconds());
             updateDrive();
             updateSlides();
             updateExtension();
+            long currentTime=System.nanoTime();
+            long loopcycle=currentTime-lastLoopTime;
+            lastLoopTime=currentTime;
+            double lts = loopcycle/100_000_000.0;
+            lts=1/lts;
+            telemetry.addData("loop cycle in hz", lts);
+
             telemetry.update();
         }
     }
@@ -86,7 +95,8 @@ public class _Main extends LinearOpMode {
         // target position must be set prior to setting mode to RUN_TO_POSITION
         leftSlideMotor.setTargetPosition(0);
         rightSlideMotor.setTargetPosition(0);
-
+        leftSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -147,9 +157,9 @@ public class _Main extends LinearOpMode {
         // for some reason setPosition() affects velocity, not position...
         // it also takes input from 0-1, where 0 is maximum left, 1 is maximum right, and 0.5 is no movement
         // it's weird, but it is what it is
-        if (gamepad1.dpad_right || gamepad2.dpad_right) {
+        if (gamepad1.right_bumper || gamepad2.right_bumper) {
             extensionServo.setPower(1);
-        } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
+        } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
             extensionServo.setPower(-1);
         } else {
             extensionServo.setPower(0);
