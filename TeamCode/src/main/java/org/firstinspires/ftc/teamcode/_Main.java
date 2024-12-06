@@ -27,7 +27,8 @@ public class _Main extends LinearOpMode {
     private CRServo extensionServo;
     private CRServo rotationServo;
     private IMU imu;
-
+    private int intaktrigger=0;
+    private boolean intakemode=false;
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -56,6 +57,7 @@ public class _Main extends LinearOpMode {
     }
 
     private void initHardware() {
+
         // DRIVE MOTORS
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
@@ -157,13 +159,24 @@ public class _Main extends LinearOpMode {
         // for some reason setPosition() affects velocity, not position...
         // it also takes input from 0-1, where 0 is maximum left, 1 is maximum right, and 0.5 is no movement
         // it's weird, but it is what it is
-        if (gamepad1.right_bumper || gamepad2.right_bumper) {
-            extensionServo.setPower(1);
-        } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
+
+
+
+        if (gamepad1.left_bumper || gamepad2.left_bumper) {
+            if (intaktrigger==0){
+                intakemode=!intakemode;
+                intaktrigger=1;
+            }
             extensionServo.setPower(-1);
+        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
+            extensionServo.setPower(1);
         } else {
-            extensionServo.setPower(0);
+            if (!intakemode) extensionServo.setPower(0);
+            intaktrigger=0;
         }
+        if (intakemode)
+            extensionServo.setPower(-1);
+
         if (gamepad1.right_trigger > 0 || gamepad2.right_trigger > 0) {
             rotationServo.setPower(0.6);
         } else if (gamepad1.left_trigger > 0 || gamepad2.left_trigger > 0) {
