@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 // Main TeleOp
 @Autonomous(name = ".Basket")
-public class _AutoBasket extends LinearOpMode {
+public class ToRight extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftMotor;
     private DcMotor frontRightMotor;
@@ -34,52 +34,7 @@ public class _AutoBasket extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         initHardware();
         waitForStart();
-
-
-        //rotationServo.setPower(0.1);
-        slideTarget(2);
-        sleep(500);
-        mv(0.5,0,0, 200);
-        mv(0,0.2,-0.19, 900);
-        mv(0,0,-0.2,400);
-        mv(0.4,0,0, 400);
-        mv(0.4,0,0, 200);
-        mv(0.0,0.4,0, 350);
-        //extend();
-        outtake();
-        mv(0.0,-0.4,0, 350);
-        //shorten();
-        //mv(0,-0.2,0, 800);
-        slideTarget(0);
-        sleep(300);
-        mv(0,0,0.2,500);
-        mv(0,-0.2,0.19, 800);
-        mv(0, -0.5,0, 50);
-        sleep(300);
-        mv(0.6,0,0, 1700);
-        sleep(50);
-        mv(-0.6,0,0, 200);
-        mv(0, -0.5,0, 400);
-        mv(-0.4,0,0, 300);
-        rotationServo.setPower(-0.6);
-        extend();
-        mv(0, 0.2, 0, 3000);
-
-        shorten();
-        mv(-0.4,0,0, 1000);
-        slideTarget(2);
-
-        mv(0,-0.2,0.19, 800);
-        extend();
-        outtake();
-
-
-        waitForStart();
-        runtime.reset();
-
-
-        waitForStart();
-        runtime.reset();
+        mv(0.5,0,0,700);
 
 
     }

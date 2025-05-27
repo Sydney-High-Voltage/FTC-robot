@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 // Main TeleOp
-@TeleOp(name = "Main")
+@TeleOp(name = "Main Dec 7 nationals")
 public class _Main extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftMotor;
@@ -27,8 +27,9 @@ public class _Main extends LinearOpMode {
     private CRServo extensionServo;
     private CRServo rotationServo;
     private IMU imu;
-    private int intaktrigger=0;
-    private boolean intakemode=false;
+    private int intaktrigger = 0;
+    private boolean intakemode = false;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -45,11 +46,11 @@ public class _Main extends LinearOpMode {
             updateDrive();
             updateSlides();
             updateExtension();
-            long currentTime=System.nanoTime();
-            long loopcycle=currentTime-lastLoopTime;
-            lastLoopTime=currentTime;
-            double lts = loopcycle/100_000_000.0;
-            lts=1/lts;
+            long currentTime = System.nanoTime();
+            long loopcycle = currentTime - lastLoopTime;
+            lastLoopTime = currentTime;
+            double lts = loopcycle / 1000_000_000.0;
+            lts = 1 / lts;
             telemetry.addData("loop cycle in hz", lts);
 
             telemetry.update();
@@ -57,7 +58,6 @@ public class _Main extends LinearOpMode {
     }
 
     private void initHardware() {
-
         // DRIVE MOTORS
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
@@ -132,6 +132,8 @@ public class _Main extends LinearOpMode {
         rightSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftSlideMotor.setPower(1);
         rightSlideMotor.setPower(1);
+        leftSlideMotor.setVelocity(1e9);
+        rightSlideMotor.setVelocity(1e9);
         c = gamepad1.a || gamepad2.a || gamepad1.b || gamepad2.b || gamepad1.x || gamepad2.x;
         if (!c && Math.abs(leftSlideMotor.getCurrentPosition() - leftSlideMotor.getTargetPosition()) < 15) {
             leftSlideMotor.setPower(0);
@@ -159,28 +161,25 @@ public class _Main extends LinearOpMode {
         // for some reason setPosition() affects velocity, not position...
         // it also takes input from 0-1, where 0 is maximum left, 1 is maximum right, and 0.5 is no movement
         // it's weird, but it is what it is
-
-
-
-        if (gamepad1.left_bumper || gamepad2.left_bumper) {
-            if (intaktrigger==0){
-                intakemode=!intakemode;
-                intaktrigger=1;
+        if (gamepad1.right_bumper || gamepad2.right_bumper) {
+            if (intaktrigger == 0) {
+                intakemode = !intakemode;
+                intaktrigger = 1;
             }
             extensionServo.setPower(-1);
-        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
-            extensionServo.setPower(1);
+        } else if (gamepad1.left_trigger > 0 || gamepad2.left_trigger > 0) {
+            extensionServo.setPower(0.4);
         } else {
             if (!intakemode) extensionServo.setPower(0);
-            intaktrigger=0;
+            intaktrigger = 0;
         }
         if (intakemode)
             extensionServo.setPower(-1);
 
         if (gamepad1.right_trigger > 0 || gamepad2.right_trigger > 0) {
-            rotationServo.setPower(0.6);
-        } else if (gamepad1.left_trigger > 0 || gamepad2.left_trigger > 0) {
-            rotationServo.setPower(-0.6);
+            rotationServo.setPower(1);
+        } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
+            rotationServo.setPower(-1);
         } else {
             rotationServo.setPower(0);
         }
