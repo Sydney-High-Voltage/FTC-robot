@@ -65,8 +65,8 @@ public class _Main extends LinearOpMode {
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
 
         // the front right motor is reversed for some reason
-        //frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         //backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         //backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -195,7 +195,7 @@ public class _Main extends LinearOpMode {
         // TODO: fix
         //driveFieldRelative(inputX, inputY, inputR);
         telemetry.addData("Input X", gamepad1.left_stick_x);
-        drive(inputR, -inputY, inputX);
+        drive(-inputX, -inputY, inputR);
     }
 
 //    private void driveFieldRelative(double x, double y, double r) {
