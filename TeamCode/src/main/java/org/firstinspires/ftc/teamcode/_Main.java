@@ -72,13 +72,13 @@ public class _Main extends LinearOpMode {
 
 
         // IMU
-        imu = hardwareMap.get(IMU.class, "imu");
-        //rightSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        final IMU.Parameters params = new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
-                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
-        imu.initialize(params);
+//        imu = hardwareMap.get(IMU.class, "imu");
+//        //rightSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        final IMU.Parameters params = new IMU.Parameters(
+//                new RevHubOrientationOnRobot(
+//                        RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
+//                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+//        imu.initialize(params);
 
         // EXTENSION SERVO
         extensionServo = hardwareMap.get(CRServo.class, "extensionServo");
@@ -198,14 +198,14 @@ public class _Main extends LinearOpMode {
         drive(inputR, -inputY, inputX);
     }
 
-    private void driveFieldRelative(double x, double y, double r) {
-        // https://en.wikipedia.org/wiki/Rotation_matrix
-        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double robotRelativeY = x * Math.cos(yaw) + y * Math.sin(yaw);
-        double robotRelativeX = -x * Math.sin(yaw) + y * Math.cos(yaw);
-        drive(x, y, r);
-        //drive(robotRelativeX, robotRelativeY, r);
-    }
+//    private void driveFieldRelative(double x, double y, double r) {
+//        // https://en.wikipedia.org/wiki/Rotation_matrix
+//        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        double robotRelativeY = x * Math.cos(yaw) + y * Math.sin(yaw);
+//        double robotRelativeX = -x * Math.sin(yaw) + y * Math.cos(yaw);
+//        drive(x, y, r);
+//        //drive(robotRelativeX, robotRelativeY, r);
+//    }
 
     private void drive(double x, double y, double r) {
 
