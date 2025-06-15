@@ -167,7 +167,7 @@ public class _Main extends LinearOpMode {
                 intaktrigger = 1;
             }
             extensionServo.setPower(-1);
-        } else if (gamepad1.left_trigger > 0 || gamepad2.left_trigger > 0) {
+        } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
             extensionServo.setPower(0.4);
         } else {
             if (!intakemode) extensionServo.setPower(0);
@@ -178,7 +178,7 @@ public class _Main extends LinearOpMode {
 
         if (gamepad1.right_trigger > 0 || gamepad2.right_trigger > 0) {
             rotationServo.setPower(1);
-        } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
+        } else if (gamepad1.left_trigger>0 || gamepad2.left_trigger>0) {
             rotationServo.setPower(-1);
         } else {
             rotationServo.setPower(0);
@@ -195,7 +195,7 @@ public class _Main extends LinearOpMode {
         // TODO: fix
         //driveFieldRelative(inputX, inputY, inputR);
         telemetry.addData("Input X", gamepad1.left_stick_x);
-        drive(-inputX, -inputY, inputR);
+        drive(-inputX, -inputY, -inputR);
     }
 
 //    private void driveFieldRelative(double x, double y, double r) {
