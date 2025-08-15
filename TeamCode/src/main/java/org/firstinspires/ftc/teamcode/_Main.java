@@ -59,10 +59,10 @@ public class _Main extends LinearOpMode {
 
     private void initHardware() {
         // DRIVE MOTORS
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
-        backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "leftFront");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "rightFront");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "leftRear");
+        backRightMotor = hardwareMap.get(DcMotor.class, "rightRear");
 
         // the front right motor is reversed for some reason
         //frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -81,11 +81,11 @@ public class _Main extends LinearOpMode {
 //        imu.initialize(params);
 
         // EXTENSION SERVO
-        extensionServo = hardwareMap.get(CRServo.class, "extensionServo");
-        rotationServo = hardwareMap.get(CRServo.class, "rotationServo");
+        extensionServo = hardwareMap.get(CRServo.class, "iG");
+        rotationServo = hardwareMap.get(CRServo.class, "iLR");
         // SLIDE MOTORS
-        leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlideMotor");
-        rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlideMotor");
+        leftSlideMotor = hardwareMap.get(DcMotorEx.class, "iRR");
+        rightSlideMotor = hardwareMap.get(DcMotorEx.class, "iP");
         rightSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         // we use the slides for climbing as well, so we should brake on zero power
         leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
